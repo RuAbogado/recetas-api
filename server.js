@@ -1,33 +1,45 @@
+// Cargar variables de entorno desde .env (como la URI de MongoDB)
 require('dotenv').config();
+
+// Importo express para crear el servidor
 const express = require('express');
+
+// Importo mongoose para conectarme a MongoDB Atlas
 const mongoose = require('mongoose');
+
+// Habilito CORS para permitir peticiones desde el frontend
 const cors = require('cors');
+
+// Importo path para poder usar rutas absolutas al servir archivos
 const path = require('path');
 
+// Inicializo la aplicación
 const app = express();
 
-//CORS global
+// Activar CORS globalmente (permite peticiones desde cualquier origen)
 app.use(cors());
 
-//Middleware de Express
+// Middleware para interpretar JSON en las peticiones
 app.use(express.json());
+
+// Middleware para interpretar formularios codificados (como los enviados por forms)
 app.use(express.urlencoded({ extended: true }));
 
-//Servir imágenes desde /uploads
+// Configuración para servir las imágenes estáticas desde la carpeta "uploads"
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-//Conexión a MongoDB Atlas
+// Conexión a la base de datos de MongoDB Atlas usando URI del archivo .env
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log("Conectado a MongoDB"))
-.catch(err => console.error("Error en la conexión", err));
+.then(() => console.log("Conectado a MongoDB")) // Mensaje si se conecta bien
+.catch(err => console.error("Error en la conexión", err)); // Mensaje si hay error
 
-//Ruta principal de la API
-app.use('/api/recetas', require('./routes/recetas'));
+// Ruta base de la API para recetas
+app.use('/api/recetas', require('./routes/recetas')); // Todas las rutas están en ese archivo
 
-//Levantar servidor
+// Levanto el servidor en el puerto definido (por variable de entorno o 3000 por defecto)
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en Atlas ${PORT}`);
