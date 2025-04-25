@@ -9,7 +9,4 @@ const RecetaSchema = new mongoose.Schema({
     imagenes: { type: [String], default: [] }
 }, { timestamps: true });// Agrega automáticamente campos `createdAt` y `updatedAt`
 
-//RecetaSchema.set('toJSON', { virtuals: true });
-//RecetaSchema.set('toObject', { virtuals: true });
-
 module.exports = mongoose.model('Receta', RecetaSchema);
